@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.hdfcbank.neftiladmiproccessor.repository.NilRepositoryTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2025-09-01T09:47:51.103Z" hostname="C02J61-7821B24F" time="0.084">
+  <properties/>
+  <testcase name="testUpdateAdmiTracker()" classname="com.hdfcbank.neftiladmiproccessor.repository.NilRepositoryTest" time="0.066"/>
+  <testcase name="testInsertAdmi004Tracker()" classname="com.hdfcbank.neftiladmiproccessor.repository.NilRepositoryTest" time="0.001"/>
+  <testcase name="testSaveDuplicateEntry_insert()" classname="com.hdfcbank.neftiladmiproccessor.repository.NilRepositoryTest" time="0.011"/>
+  <testcase name="testSaveDuplicateEntry_update()" classname="com.hdfcbank.neftiladmiproccessor.repository.NilRepositoryTest" time="0.001"/>
+  <testcase name="testFindByMsgId_found()" classname="com.hdfcbank.neftiladmiproccessor.repository.NilRepositoryTest" time="0.004"/>
+  <testcase name="testFindByMsgId_notFound()" classname="com.hdfcbank.neftiladmiproccessor.repository.NilRepositoryTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

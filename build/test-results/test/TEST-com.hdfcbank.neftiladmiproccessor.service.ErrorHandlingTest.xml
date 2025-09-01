@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.hdfcbank.neftiladmiproccessor.service.ErrorHandlingTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-09-01T09:47:59.206Z" hostname="C02J61-7821B24F" time="0.016">
+  <properties/>
+  <testcase name="testHandleInvalidPayload_success()" classname="com.hdfcbank.neftiladmiproccessor.service.ErrorHandlingTest" time="0.005"/>
+  <testcase name="testHandleInvalidPayload_jsonProcessingException()" classname="com.hdfcbank.neftiladmiproccessor.service.ErrorHandlingTest" time="0.011"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.hdfcbank.neftiladmiproccessor.service.AdmiXmlProcessorTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2025-09-01T09:47:51.188Z" hostname="C02J61-7821B24F" time="8.016">
+  <properties/>
+  <testcase name="testParseXml_invalidXml_throwsException()" classname="com.hdfcbank.neftiladmiproccessor.service.AdmiXmlProcessorTest" time="0.195"/>
+  <testcase name="testParseXml_evtCdOther_EPH()" classname="com.hdfcbank.neftiladmiproccessor.service.AdmiXmlProcessorTest" time="0.083"/>
+  <testcase name="testParseXml_evtCdOther_FC()" classname="com.hdfcbank.neftiladmiproccessor.service.AdmiXmlProcessorTest" time="0.004"/>
+  <testcase name="testParseXml_evtCdOther_EPH_branch()" classname="com.hdfcbank.neftiladmiproccessor.service.AdmiXmlProcessorTest" time="0.004"/>
+  <testcase name="testParseXml_evtCdF95()" classname="com.hdfcbank.neftiladmiproccessor.service.AdmiXmlProcessorTest" time="7.73"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
