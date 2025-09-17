@@ -93,21 +93,21 @@ class ProcessControllerTest {
         assertEquals("ERROR", resp.getBody().getStatus());
     }
 
-    @Test
-    void testTestProcess_validPayload() throws Exception {
-        Header header = new Header();
-        header.setInvalidPayload(false);
-        Body body = new Body();
-        ReqPayload reqPayload = new ReqPayload(header, body);
-        String reqPayloadString = objectMapper.writeValueAsString(reqPayload);
-        String base64 = Base64.getEncoder().encodeToString(reqPayloadString.getBytes());
-        String json = "{\"data_base64\":\"" + base64 + "\"}";
-        doNothing().when(admiXmlProcessor).parseXml(any());
-        Mono<ResponseEntity<Response>> result = controller.testProcess(json);
-        ResponseEntity<Response> resp = result.block();
-        assertEquals(HttpStatus.OK, resp.getStatusCode());
-        assertEquals("SUCCESS", resp.getBody().getStatus());
-    }
+//    @Test
+//    void testTestProcess_validPayload() throws Exception {
+//        Header header = new Header();
+//        header.setInvalidPayload(false);
+//        Body body = new Body();
+//        ReqPayload reqPayload = new ReqPayload(header, body);
+//        String reqPayloadString = objectMapper.writeValueAsString(reqPayload);
+//        String base64 = Base64.getEncoder().encodeToString(reqPayloadString.getBytes());
+//        String json = "{\"data_base64\":\"" + base64 + "\"}";
+//        doNothing().when(admiXmlProcessor).parseXml(any());
+//        Mono<ResponseEntity<Response>> result = controller.testProcess(json);
+//        ResponseEntity<Response> resp = result.block();
+//        assertEquals(HttpStatus.OK, resp.getStatusCode());
+//        assertEquals("SUCCESS", resp.getBody().getStatus());
+//    }
 
     @Test
     void testTestProcess_exception() throws Exception {

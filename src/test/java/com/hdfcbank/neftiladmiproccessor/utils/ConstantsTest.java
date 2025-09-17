@@ -12,17 +12,17 @@ class ConstantsTest {
 
     @Test
     void testDispatchedFc() {
-        assertEquals("DISPATCHED_FC", Constants.DISPATCHED_FC);
+        assertEquals("FC_DISPATCHER", Constants.FC_DISPATCHER);
     }
 
     @Test
     void testDispatchedEph() {
-        assertEquals("DISPATCHED_EPH", Constants.DISPATCHED_EPH);
+        assertEquals("EPH_DISPATCHER", Constants.EPH_DISPATCHER);
     }
 
     @Test
     void testInProgress() {
-        assertEquals("INPROGRESS", Constants.INPROGRESS);
+        assertEquals("SENT_TO_DISPATCHER", Constants.SENT_TO_DISPATCHER);
     }
 }
 

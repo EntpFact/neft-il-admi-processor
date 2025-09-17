@@ -49,12 +49,47 @@ class NilRepositoryTest {
     }
 
     @Test
-    void testFindByMsgId_found() {
-        MsgEventTracker tracker = new MsgEventTracker();
+    void testFindByMsgId_found() throws Exception {
+        // Mock ResultSet to simulate DB row
+        java.sql.ResultSet rs = mock(java.sql.ResultSet.class);
+        when(rs.getString("msg_id")).thenReturn("id");
+        when(rs.getString("source")).thenReturn("SRC");
+        when(rs.getString("target")).thenReturn("TGT");
+        when(rs.getString("flow_type")).thenReturn("FLOW");
+        when(rs.getString("msg_type")).thenReturn("TYPE");
+        when(rs.getString("original_req")).thenReturn("REQ");
+        when(rs.getBigDecimal("original_req_count")).thenReturn(new java.math.BigDecimal("2"));
+        when(rs.getBigDecimal("consolidate_amt")).thenReturn(new java.math.BigDecimal("100.50"));
+        when(rs.getString("intermediate_req")).thenReturn("INTREQ");
+        when(rs.getBigDecimal("intemdiate_count")).thenReturn(new java.math.BigDecimal("3"));
+        when(rs.getString("status")).thenReturn("DISPATCHED");
+        java.time.LocalDateTime now = java.time.LocalDateTime.now();
+        when(rs.getObject(eq("created_time"), eq(java.time.LocalDateTime.class))).thenReturn(now);
+        when(rs.getObject(eq("modified_timestamp"), eq(java.time.LocalDateTime.class))).thenReturn(now);
+
+        // Capture the RowMapper and invoke it manually
         when(jdbc.query(anyString(), any(MapSqlParameterSource.class), any(org.springframework.jdbc.core.RowMapper.class)))
-                .thenReturn(List.of(tracker));
+                .thenAnswer(invocation -> {
+                    org.springframework.jdbc.core.RowMapper<MsgEventTracker> rowMapper = invocation.getArgument(2);
+                    MsgEventTracker tracker = rowMapper.mapRow(rs, 0);
+                    return List.of(tracker);
+                });
+
         MsgEventTracker result = repo.findByMsgId("id");
         assertNotNull(result);
+        assertEquals("id", result.getMsgId());
+        assertEquals("SRC", result.getSource());
+        assertEquals("TGT", result.getTarget());
+        assertEquals("FLOW", result.getFlowType());
+        assertEquals("TYPE", result.getMsgType());
+        assertEquals("REQ", result.getOriginalReq());
+        assertEquals(new java.math.BigDecimal("2"), result.getOriginalReqCount());
+        assertEquals(new java.math.BigDecimal("100.50"), result.getConsolidateAmt());
+        assertEquals("INTREQ", result.getIntermediateReq());
+        assertEquals(new java.math.BigDecimal("3"), result.getIntemdiateCount());
+        assertEquals("DISPATCHED", result.getStatus());
+        assertEquals(now, result.getCreatedTime());
+        assertEquals(now, result.getModifiedTimestamp());
     }
 
     @Test
@@ -97,4 +132,3 @@ class NilRepositoryTest {
         verify(jdbc).update(anyString(), any(MapSqlParameterSource.class));
     }
 }
-

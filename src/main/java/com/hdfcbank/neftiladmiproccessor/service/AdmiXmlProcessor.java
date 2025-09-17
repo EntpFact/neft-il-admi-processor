@@ -35,7 +35,6 @@ public class AdmiXmlProcessor {
     private ObjectMapper objectMapper;
 
 
-    //    @ServiceActivator(inputChannel = "admi004")
     public void parseXml(ReqPayload reqPayload) throws Exception {
         String xmlString = reqPayload.getBody().getPayload();
         Document originalDoc = NILRouterCommonUtility.parseXmlStringToDocument(xmlString);
@@ -49,69 +48,28 @@ public class AdmiXmlProcessor {
         Admi004Tracker admi004Tracker = null;
         Admi004Tracker fcAdmi004Tracker = null;
         Admi004Tracker ephAdmi004Tracker = null;
-        ReqPayload FcReqPayload = reqPayload;
-        ReqPayload ephReqPayload = reqPayload;
+        ReqPayload fcReqPayload = new ReqPayload(reqPayload);
+        ReqPayload ephReqPayload = new ReqPayload(reqPayload);
 
         if (evtCd.equalsIgnoreCase("F95")) {
-            reqPayload.getHeader().setTarget(DISPATCHED_FC);
+            fcReqPayload.getHeader().setTarget(FC_DISPATCHER);
+            ephReqPayload.getHeader().setTarget(EPH_DISPATCHER);
 
-            fcAdmi004Tracker = Admi004Tracker.builder()
-                    .msgId(msgId)
-                    .msgType(msgType)
-                    .batchTimestamp(OffsetDateTime.parse(batchCreationDate)
-                            .toLocalDateTime())
-                    .batchCreationDate(OffsetDateTime.parse(batchCreationDate).toLocalDate())
-                    .status(INPROGRESS).
-                    originalReq(xmlString)
-                    .target(DISPATCHED_FC)
-                    .version(BigDecimal.ONE)
-                    .replayCount(0)
-                    .build();
+            fcAdmi004Tracker=buildAdmiTracker(msgId, msgType, batchCreationDate, xmlString, FC_DISPATCHER);
+            ephAdmi004Tracker=buildAdmiTracker(msgId, msgType, batchCreationDate, xmlString, EPH_DISPATCHER);
 
-            ephAdmi004Tracker = Admi004Tracker.builder()
-                    .msgId(msgId)
-                    .msgType(msgType)
-                    .batchTimestamp(OffsetDateTime.parse(batchCreationDate)
-                            .toLocalDateTime())
-                    .batchCreationDate(OffsetDateTime.parse(batchCreationDate).toLocalDate())
-                    .status(INPROGRESS).
-                    originalReq(xmlString)
-                    .target(DISPATCHED_EPH)
-                    .version(BigDecimal.ONE)
-                    .replayCount(0)
-                    .build();
         } else {
 
             char ch = msgId.charAt(13);
             if (ch >= '0' && ch <= '4') {
-                reqPayload.getHeader().setTarget("FC");
-                admi004Tracker = Admi004Tracker.builder()
-                        .msgId(msgId)
-                        .msgType(msgType)
-                        .batchTimestamp(OffsetDateTime.parse(batchCreationDate)
-                                .toLocalDateTime())
-                        .batchCreationDate(OffsetDateTime.parse(batchCreationDate).toLocalDate())
-                        .status(INPROGRESS)
-                        .originalReq(xmlString)
-                        .target(DISPATCHED_FC)
-                        .version(BigDecimal.ONE)
-                        .replayCount(0)
-                        .build();
+                reqPayload.getHeader().setTarget(FC_DISPATCHER);
+
+                admi004Tracker=buildAdmiTracker(msgId, msgType, batchCreationDate, xmlString, FC_DISPATCHER);
 
             } else if (ch >= '5' && ch <= '9') {
-                reqPayload.getHeader().setTarget("EPH");
-                admi004Tracker = Admi004Tracker.builder()
-                        .msgId(msgId)
-                        .msgType(msgType)
-                        .batchTimestamp(OffsetDateTime.parse(batchCreationDate)
-                                .toLocalDateTime())
-                        .batchCreationDate(OffsetDateTime.parse(batchCreationDate).toLocalDate())
-                        .status(INPROGRESS).
-                        originalReq(xmlString)
-                        .target(DISPATCHED_EPH)
-                        .version(BigDecimal.ONE)
-                        .replayCount(0)
-                        .build();
+                reqPayload.getHeader().setTarget(EPH_DISPATCHER);
+                admi004Tracker=buildAdmiTracker(msgId, msgType, batchCreationDate, xmlString, EPH_DISPATCHER);
+
 
             }
         }
@@ -122,7 +80,7 @@ public class AdmiXmlProcessor {
 
                 nilRepository.updateAdmiTracker(fcAdmi004Tracker);
                 nilRepository.insertAdmi004Tracker(ephAdmi004Tracker);
-                String fcReqPayloadString = objectMapper.writeValueAsString(FcReqPayload);
+                String fcReqPayloadString = objectMapper.writeValueAsString(fcReqPayload);
                 String ephReqPayloadString = objectMapper.writeValueAsString(ephReqPayload);
                 kafkaUtils.publishToResponseTopic(fcReqPayloadString, dispatchertopic);
                 kafkaUtils.publishToResponseTopic(ephReqPayloadString, dispatchertopic);
@@ -136,5 +94,20 @@ public class AdmiXmlProcessor {
         }
 
 
+    }
+
+    private Admi004Tracker buildAdmiTracker(String msgId, String msgType, String batchCreationDate,
+                                            String xmlString, String target) {
+        return Admi004Tracker.builder()
+                .msgId(msgId)
+                .msgType(msgType)
+                .batchTimestamp(OffsetDateTime.parse(batchCreationDate).toLocalDateTime())
+                .batchCreationDate(OffsetDateTime.parse(batchCreationDate).toLocalDate())
+                .status(SENT_TO_DISPATCHER)
+                .originalReq(xmlString)
+                .target(target)
+                .version(BigDecimal.ONE)
+                .replayCount(0)
+                .build();
     }
 }
