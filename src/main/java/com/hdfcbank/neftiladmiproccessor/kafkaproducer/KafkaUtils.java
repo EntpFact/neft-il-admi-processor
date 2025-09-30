@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @Service
 public class KafkaUtils {
@@ -16,10 +19,15 @@ public class KafkaUtils {
     DaprProducer daprProducer;
 
 
-    public void publishToResponseTopic(String message, String topic) {
+    public void publishToResponseTopic(String message, String topic,String msgid) {
+
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("partitionKey",msgid);
 
         var kafkaBinding = PubSubOptions.builder().requestData(message).topic(topic)
-                .pubsubName(Constants.KAFKA_RESPONSE_TOPIC_DAPR_BINDING).build();
+                .pubsubName(Constants.KAFKA_RESPONSE_TOPIC_DAPR_BINDING)
+                .metadata(metadata)
+                .build();
         var resp = daprProducer.invokeDaprPublishEvent(kafkaBinding);
         resp.doOnSuccess(res -> {
             log.info("Response published to response topic successfully");

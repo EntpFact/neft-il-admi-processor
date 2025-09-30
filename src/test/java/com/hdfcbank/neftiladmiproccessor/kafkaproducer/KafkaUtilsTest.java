@@ -28,14 +28,14 @@ class KafkaUtilsTest {
     @Test
     void testPublishToResponseTopicSuccess() {
         when(daprProducer.invokeDaprPublishEvent(any(PubSubOptions.class))).thenReturn(Mono.just("ok"));
-        kafkaUtils.publishToResponseTopic("msg", "topic");
+        kafkaUtils.publishToResponseTopic("msg", "topic","123");
         verify(daprProducer, times(1)).invokeDaprPublishEvent(any(PubSubOptions.class));
     }
 
     @Test
     void testPublishToResponseTopicError() {
         when(daprProducer.invokeDaprPublishEvent(any(PubSubOptions.class))).thenReturn(Mono.error(new RuntimeException("fail")));
-        kafkaUtils.publishToResponseTopic("msg", "topic");
+        kafkaUtils.publishToResponseTopic("msg", "topic","123");
         verify(daprProducer, times(1)).invokeDaprPublishEvent(any(PubSubOptions.class));
     }
 }

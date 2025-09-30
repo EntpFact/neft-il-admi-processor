@@ -82,13 +82,13 @@ public class AdmiXmlProcessor {
                 nilRepository.insertAdmi004Tracker(ephAdmi004Tracker);
                 String fcReqPayloadString = objectMapper.writeValueAsString(fcReqPayload);
                 String ephReqPayloadString = objectMapper.writeValueAsString(ephReqPayload);
-                kafkaUtils.publishToResponseTopic(fcReqPayloadString, dispatchertopic);
-                kafkaUtils.publishToResponseTopic(ephReqPayloadString, dispatchertopic);
+                kafkaUtils.publishToResponseTopic(fcReqPayloadString, dispatchertopic,msgId);
+                kafkaUtils.publishToResponseTopic(ephReqPayloadString, dispatchertopic,msgId);
 
             } else {
                 nilRepository.updateAdmiTracker(admi004Tracker);
                 String reqPayloadString = objectMapper.writeValueAsString(reqPayload);
-                kafkaUtils.publishToResponseTopic(reqPayloadString, dispatchertopic);
+                kafkaUtils.publishToResponseTopic(reqPayloadString, dispatchertopic,msgId);
             }
 
         }

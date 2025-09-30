@@ -29,7 +29,7 @@ public class ErrorHandling {
         reqPayload.getHeader().setTarget(errortopic);
         String reqPayloadString = objectMapper.writeValueAsString(reqPayload);
 
-       kafkaUtils.publishToResponseTopic(reqPayloadString,dispatchertopic);
+       kafkaUtils.publishToResponseTopic(reqPayloadString,dispatchertopic,reqPayload.getHeader().getMsgId());
 
     }
 }

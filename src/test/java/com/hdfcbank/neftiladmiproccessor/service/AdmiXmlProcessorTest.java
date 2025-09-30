@@ -79,7 +79,7 @@ class AdmiXmlProcessorTest {
             admiXmlProcessor.parseXml(reqPayload);
             // Optionally verify EPH branch
             verify(nilRepository).updateAdmiTracker(any(Admi004Tracker.class));
-            verify(kafkaUtils).publishToResponseTopic(anyString(), anyString());
+            verify(kafkaUtils).publishToResponseTopic(anyString(), anyString(),anyString());
         }
     }
 
