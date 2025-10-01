@@ -77,6 +77,7 @@ public class ProcessController {
 
         String base64Data = rootNode.get("data_base64").asText();
         String reqPayloadString = new String(Base64.getDecoder().decode(base64Data), StandardCharsets.UTF_8);
+        reqPayloadString = objectMapper.readValue(reqPayloadString, String.class);
         ReqPayload reqpayload = objectMapper.readValue(reqPayloadString, ReqPayload.class);
         if (reqpayload.getHeader().isInvalidPayload()) {
             errorHandling.handleInvalidPayload(reqpayload);

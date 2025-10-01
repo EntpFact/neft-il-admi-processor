@@ -8,17 +8,12 @@ logging:
 
 spring:
   datasource:
-    url: ${datasourceUrl:jdbc:postgresql://34.135.239.235:5432/postgresdb}
-    username: ${dbusername:admin}
-    password: ${password:test123}
-    driver-class-name: ${diverclassname:org.postgresql.Driver}
+    url: ${DATABASE_URL:jdbc:postgresql://34.135.239.235:5432/postgresdb}
+    username: ${DATABASE_USERNAME:admin}
+    password: ${DATABASE_PWD:test123}
+    driver-class-name: ${DATABASE_DRIVERCLASS:org.postgresql.Driver}
 
 topic:
-  dispatchertopic: ${DISPATCHERTOPIC:DISPATCHERTOPIC}
-  errortopic: ${EPH_FC:EPH_FC}
+  dispatchertopic: ${DISPATCHERTOPIC:neftil-dispatcher-topic}
+  errortopic: ${ERROR_TOPIC:neftil-dispatcher-topic}
 
-cug_flag: ${CUG_FLAG:false}
-
-mod_logic:
-  mod_denominator: ${MOD_DENOMINATOR:100}
-  eph_percentage: ${EPH_PERCENTAGE:50}

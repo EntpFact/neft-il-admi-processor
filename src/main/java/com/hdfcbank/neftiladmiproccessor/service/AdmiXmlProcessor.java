@@ -55,20 +55,24 @@ public class AdmiXmlProcessor {
             fcReqPayload.getHeader().setTarget(FC_DISPATCHER);
             ephReqPayload.getHeader().setTarget(EPH_DISPATCHER);
 
-            fcAdmi004Tracker=buildAdmiTracker(msgId, msgType, batchCreationDate, xmlString, FC_DISPATCHER);
-            ephAdmi004Tracker=buildAdmiTracker(msgId, msgType, batchCreationDate, xmlString, EPH_DISPATCHER);
+            String fcReqPayloadString = objectMapper.writeValueAsString(fcReqPayload);
+            String ephReqPayloadString = objectMapper.writeValueAsString(ephReqPayload);
+
+            fcAdmi004Tracker=buildAdmiTracker(msgId, msgType, batchCreationDate, xmlString, FC_DISPATCHER,fcReqPayloadString);
+            ephAdmi004Tracker=buildAdmiTracker(msgId, msgType, batchCreationDate, xmlString, EPH_DISPATCHER,ephReqPayloadString);
 
         } else {
 
             char ch = msgId.charAt(13);
             if (ch >= '0' && ch <= '4') {
                 reqPayload.getHeader().setTarget(FC_DISPATCHER);
-
-                admi004Tracker=buildAdmiTracker(msgId, msgType, batchCreationDate, xmlString, FC_DISPATCHER);
+                String reqPayloadString = objectMapper.writeValueAsString(reqPayload);
+                admi004Tracker=buildAdmiTracker(msgId, msgType, batchCreationDate, xmlString, FC_DISPATCHER,reqPayloadString);
 
             } else if (ch >= '5' && ch <= '9') {
                 reqPayload.getHeader().setTarget(EPH_DISPATCHER);
-                admi004Tracker=buildAdmiTracker(msgId, msgType, batchCreationDate, xmlString, EPH_DISPATCHER);
+                String reqPayloadString = objectMapper.writeValueAsString(reqPayload);
+                admi004Tracker=buildAdmiTracker(msgId, msgType, batchCreationDate, xmlString, EPH_DISPATCHER,reqPayloadString);
 
 
             }
@@ -97,7 +101,7 @@ public class AdmiXmlProcessor {
     }
 
     private Admi004Tracker buildAdmiTracker(String msgId, String msgType, String batchCreationDate,
-                                            String xmlString, String target) {
+                                            String xmlString, String target,String reqPayloadString) {
         return Admi004Tracker.builder()
                 .msgId(msgId)
                 .msgType(msgType)
@@ -108,6 +112,8 @@ public class AdmiXmlProcessor {
                 .target(target)
                 .version(BigDecimal.ONE)
                 .replayCount(0)
+                .invalidMsg(false)
+                .transformedJsonReq(reqPayloadString)
                 .build();
     }
 }

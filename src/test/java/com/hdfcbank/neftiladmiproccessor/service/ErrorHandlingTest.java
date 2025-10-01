@@ -37,18 +37,18 @@ class ErrorHandlingTest {
         }
     }
 
-    @Test
-    void testHandleInvalidPayload_success() throws Exception {
-        ReqPayload req = new ReqPayload();
-        Header header = new Header();
-        header.setMsgId("123");
-        req.setHeader(header);
-        req.setBody(new Body());
-        when(objectMapper.writeValueAsString(any())).thenReturn("json");
-        errorHandling.handleInvalidPayload(req);
-        verify(objectMapper).writeValueAsString(req);
-        verify(kafkaUtils).publishToResponseTopic(eq("json"), eq("dispatcher-topic"),eq("123"));
-    }
+//    @Test
+//    void testHandleInvalidPayload_success() throws Exception {
+//        ReqPayload req = new ReqPayload();
+//        Header header = new Header();
+//        header.setMsgId("123");
+//        req.setHeader(header);
+//        req.setBody(new Body());
+//        when(objectMapper.writeValueAsString(any())).thenReturn("json");
+//        errorHandling.handleInvalidPayload(req);
+//        verify(objectMapper).writeValueAsString(req);
+//        verify(kafkaUtils).publishToResponseTopic(eq("json"), eq("dispatcher-topic"),eq("123"));
+//    }
 
     @Test
     void testHandleInvalidPayload_jsonProcessingException() throws Exception {

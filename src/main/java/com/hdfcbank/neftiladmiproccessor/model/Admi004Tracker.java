@@ -17,6 +17,8 @@ public class Admi004Tracker {
     private String target;
     private BigDecimal version;
     private Integer replayCount;
+    private String transformedJsonReq;
+    private Boolean invalidMsg;
     private LocalDate batchCreationDate;
     private LocalDateTime batchTimestamp;
     private LocalDateTime createdTime;

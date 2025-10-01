@@ -3,6 +3,7 @@ package com.hdfcbank.neftiladmiproccessor.repository;
 
 import com.hdfcbank.neftiladmiproccessor.model.Admi004Tracker;
 import com.hdfcbank.neftiladmiproccessor.model.MsgEventTracker;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Repository
 public class NilRepository {
 
@@ -28,7 +30,9 @@ public class NilRepository {
                 "batch_creation_date = :batchCreationDate, " +
                 "batch_timestamp = :batchTimestamp, " +
                 "modified_timestamp = :modifiedTimestamp, " +
-                "status = :status " +
+                "status = :status, " +
+                "invalid_msg = :invalidMsg, " +
+                "transformed_json_req = :transformedJsonReq::json " +
                 "WHERE msg_id = :msgId";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -41,15 +45,25 @@ public class NilRepository {
         params.addValue("batchTimestamp", tracker.getBatchTimestamp());
         params.addValue("modifiedTimestamp", LocalDateTime.now());
         params.addValue("status", tracker.getStatus());
+        params.addValue("invalidMsg", tracker.getInvalidMsg());
+        params.addValue("transformedJsonReq", tracker.getTransformedJsonReq());
 
+        int updatedRows = namedParameterJdbcTemplate.update(sql, params);
+
+        if (updatedRows == 0) {
+            log.warn("No rows updated in admi004_tracker for msgId={}", tracker.getMsgId());
+        }
     }
+
 
     public void insertAdmi004Tracker(Admi004Tracker tracker) {
         String sql = "INSERT INTO network_il.admi004_tracker (" +
                 "msg_id, msg_type, original_req, target, status, replay_count, " +
-                "version, batch_creation_date, batch_timestamp, created_time, modified_timestamp) " +
+                "version, batch_creation_date, batch_timestamp, created_time, modified_timestamp, " +
+                "invalid_msg, transformed_json_req) " +
                 "VALUES (:msgId, :msgType, :originalReq, :target, :status, :replayCount, " +
-                ":version, :batchCreationDate, :batchTimestamp, :createdTime, :modifiedTimestamp)";
+                ":version, :batchCreationDate, :batchTimestamp, :createdTime, :modifiedTimestamp, " +
+                ":invalidMsg, :transformedJsonReq::json)";
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("msgId", tracker.getMsgId())
@@ -62,9 +76,17 @@ public class NilRepository {
                 .addValue("batchCreationDate", tracker.getBatchCreationDate())
                 .addValue("batchTimestamp", tracker.getBatchTimestamp())
                 .addValue("createdTime", LocalDateTime.now())
-                .addValue("modifiedTimestamp", LocalDateTime.now());
+                .addValue("modifiedTimestamp", LocalDateTime.now())
+                .addValue("invalidMsg", tracker.getInvalidMsg())
+                .addValue("transformedJsonReq", tracker.getTransformedJsonReq());
 
+        int insertedRows = namedParameterJdbcTemplate.update(sql, params);
+
+        if (insertedRows == 0) {
+            log.warn("No rows inserted in admi004_tracker for msgId={}", tracker.getMsgId());
+        }
     }
+
 
     public MsgEventTracker findByMsgId(String msgId) {
         String sql = "SELECT * FROM network_il.msg_event_tracker " +
