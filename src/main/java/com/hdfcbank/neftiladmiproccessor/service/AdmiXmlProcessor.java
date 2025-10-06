@@ -58,8 +58,8 @@ public class AdmiXmlProcessor {
             String fcReqPayloadString = objectMapper.writeValueAsString(fcReqPayload);
             String ephReqPayloadString = objectMapper.writeValueAsString(ephReqPayload);
 
-            fcAdmi004Tracker=buildAdmiTracker(msgId, msgType, batchCreationDate, xmlString, FC_DISPATCHER,fcReqPayloadString);
-            ephAdmi004Tracker=buildAdmiTracker(msgId, msgType, batchCreationDate, xmlString, EPH_DISPATCHER,ephReqPayloadString);
+            fcAdmi004Tracker = buildAdmiTracker(msgId, msgType, batchCreationDate, reqPayload.getHeader().getPrefix() + xmlString, FC_DISPATCHER, fcReqPayloadString);
+            ephAdmi004Tracker = buildAdmiTracker(msgId, msgType, batchCreationDate, reqPayload.getHeader().getPrefix() + xmlString, EPH_DISPATCHER, ephReqPayloadString);
 
         } else {
 
@@ -67,12 +67,12 @@ public class AdmiXmlProcessor {
             if (ch >= '0' && ch <= '4') {
                 reqPayload.getHeader().setTarget(FC_DISPATCHER);
                 String reqPayloadString = objectMapper.writeValueAsString(reqPayload);
-                admi004Tracker=buildAdmiTracker(msgId, msgType, batchCreationDate, xmlString, FC_DISPATCHER,reqPayloadString);
+                admi004Tracker = buildAdmiTracker(msgId, msgType, batchCreationDate, reqPayload.getHeader().getPrefix() + xmlString, FC_DISPATCHER, reqPayloadString);
 
             } else if (ch >= '5' && ch <= '9') {
                 reqPayload.getHeader().setTarget(EPH_DISPATCHER);
                 String reqPayloadString = objectMapper.writeValueAsString(reqPayload);
-                admi004Tracker=buildAdmiTracker(msgId, msgType, batchCreationDate, xmlString, EPH_DISPATCHER,reqPayloadString);
+                admi004Tracker = buildAdmiTracker(msgId, msgType, batchCreationDate, reqPayload.getHeader().getPrefix() + xmlString, EPH_DISPATCHER, reqPayloadString);
 
 
             }
